@@ -3,27 +3,29 @@ import boto3
 from botocore.exceptions import ClientError
 
 # Initialize the DynamoDB resource and table
-dynamodb = boto3.resource('dsynamodb')
+dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('StudentRecords')
 
+
 def lambda_handler(event, context):
-    # Log the received event for debugging
-    print("Received event:", json.dumps(event, indent=2))
-    
     # Check if the event is None or empty
     if not event:
         return {
             'statusCode': 400,
             'body': json.dumps('No event data received')
         }
-    
+
     # Extract the HTTP method from the event
     http_method = event.get('method')
-    
+
     try:
         if http_method == 'POST':
             # Create a new student record
-            student = json.loads(event.get('body', '{}'))
+            student = event.get('body')
+            if isinstance(student, dict):
+                student = student
+            else:
+                student = json.loads(student)
             if 'student_id' not in student:
                 return {
                     'statusCode': 400,
@@ -56,7 +58,11 @@ def lambda_handler(event, context):
 
         elif http_method == 'PUT':
             # Update an existing student record
-            student = json.loads(event.get('body', '{}'))
+            student = event.get('body')
+            if isinstance(student, dict):
+                student = student
+            else:
+                student = json.loads(student)
             if 'student_id' not in student:
                 return {
                     'statusCode': 400,

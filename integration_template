@@ -1,19 +1,33 @@
 {
-    "body" : $input.json('$'),
-    "headers": {
-        #foreach($header in $input.params().header.keySet())
-        "$header": "$util.escapeJavaScript($input.params().header.get($header))" #if($foreach.hasNext),#end
-        #end
+  "body": $input.json('$'),
+  "headers": {
+    #foreach($header in $input.params().header.keySet())
+    "$header": "$util.escapeJavaScript($input.params().header.get($header))" #if($foreach.hasNext),#end
+    #end
+  },
+  "method": "$context.httpMethod",
+  "params": {
+    #foreach($param in $input.params().path.keySet())
+    "$param": "$util.escapeJavaScript($input.params().path.get($param))" #if($foreach.hasNext),#end
+    #end
+  },
+  "query": {
+    #foreach($queryParam in $input.params().querystring.keySet())
+    "$queryParam": "$util.escapeJavaScript($input.params().querystring.get($queryParam))" #if($foreach.hasNext),#end
+    #end
+  },
+  "stageVariables": {
+    #foreach($stageVariable in $stageVariables.keySet())
+    "$stageVariable": "$util.escapeJavaScript($stageVariables.get($stageVariable))" #if($foreach.hasNext),#end
+    #end
+  },
+  "requestContext": {
+    "authorizer": {
+      "principalId": "$context.authorizer.principalId"
     },
-    "method": "$context.httpMethod",
-    "params": {
-        #foreach($param in $input.params().path.keySet())
-        "$param": "$util.escapeJavaScript($input.params().path.get($param))" #if($foreach.hasNext),#end
-        #end
-    },
-    "query": {
-        #foreach($queryParam in $input.params().querystring.keySet())
-        "$queryParam": "$util.escapeJavaScript($input.params().querystring.get($queryParam))" #if($foreach.hasNext),#end
-        #end
+    "identity": {
+      "sourceIp": "$context.identity.sourceIp",
+      "userAgent": "$context.identity.userAgent"
     }
+  }
 }
