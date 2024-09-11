@@ -88,3 +88,6 @@ CMPE272 Assignment 2
 
 
 * Currently, this application supports both READ and WRITE operations on DynamoDB via a Lambda function through a REST API.
+
+## Issues Faced
+* During the development of this project, I encountered an issue with integrating a REST API with a Lambda function, specifically in parsing the request body in the Lambda function. To resolve this, I created a custom mapping template capable of handling both GET and POST requests.
